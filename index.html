@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>樽町中生のための高校アクセス＆S値チェッカー | 鈴木俊輔</title>
+  <style>
+    /* ==========================================
+       1. 基本スタイル & CSS変数
+       ========================================== */
+    :root {
+      --primary: #1e40af;
+      --primary-light: #3b82f6;
+      --primary-bg: #eff6ff;
+      --secondary: #059669;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --bg-main: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #cbd5e1;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 50px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ==========================================
+       2. ヘッダー & ナビゲーション
+       ========================================== */
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: white;
+      padding: 24px 16px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .author-tag {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      opacity: 0.85;
+      text-align: right;
+    }
+
+    /* タブナビゲーション */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      background: #e2e8f0;
+      padding: 6px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 12px 14px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: var(--primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    /* ==========================================
+       3. メインコンテンツ & カード共通
+       ========================================== */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid var(--primary-bg);
+      padding-bottom: 8px;
+    }
+
+    /* プリセット一括入力ボタン */
+    .preset-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      background: #f1f5f9;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .preset-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      width: 100%;
+      margin-bottom: 2px;
+    }
+
+    .preset-btn {
+      background: white;
+      border: 1px solid var(--primary-light);
+      color: var(--primary);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .preset-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* ==========================================
+       4. 成績計算・1000点満点S値セクション
+       ========================================== */
+    .grade-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .radio-label {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .radio-label input {
+      display: none;
+    }
+
+    .radio-label:has(input:checked) {
+      border-color: var(--primary);
+      background-color: var(--primary-bg);
+      color: var(--primary);
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .input-group select,
+    .input-group input[type="number"] {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: white;
+    }
+
+    .ratio-select-box {
+      background: #f1f5f9;
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transition: transform 0.1s;
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    /* 計算結果表示 */
+    .result-box {
+      display: none;
+      margin-top: 24px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .score-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .score-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 16px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .score-card .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .score-card .value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* ==========================================
+       5. 高校検索・距離・ルート表示
+       ========================================== */
+    .filter-panel {
+      background: #f1f5f9;
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filter-row {
+      margin-bottom: 14px;
+    }
+
+    .filter-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag-btn {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tag-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .select-filter, .search-input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: white;
+      font-size: 0.9rem;
+    }
+
+    .address-input-box {
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+
+    /* 高校カード一覧 */
+    .school-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .school-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s;
+    }
+
+    .school-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .school-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .school-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .school-badges {
+      display: flex;
+      gap: 6px;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-public { background: #dbeafe; color: #1e40af; }
+    .badge-private { background: #fce7f3; color: #9d174d; }
+    .badge-dist { background: #d1fae5; color: #065f46; }
+
+    .school-address-text {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .map-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-map {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: background 0.2s;
+      flex: 1;
+      min-width: 170px;
+      text-align: center;
+    }
+
+    .btn-map:hover { background: #1d4ed8; }
+
+    .btn-map-custom { background: #059669; }
+    .btn-map-custom:hover { background: #047857; }
+
+    /* 追加：Google検索ボタンのスタイル */
+    .btn-map-search { background: #ea580c; }
+    .btn-map-search:hover { background: #c2410c; }
+
+    /* ==========================================
+       6. フッター
+       ========================================== */
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.3rem; }
+      .input-grid { grid-template-columns: repeat(2, 1fr); }
+      .school-header { flex-direction: column; align-items: flex-start; }
+      .btn-map { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <div class="header-content">
+      <span class="header-badge">樽町中学校 生徒専用ナビ（全80校掲載）</span>
+      <h1>自分の1000点満点スコア ＆ 通学距離マップナビ</h1>
+      <p>偏差値データなし・純粋に自分の「持ち点（S1値）」と「通学距離・乗換ルート」を確認するアプリ</p>
+      <div class="author-tag">作成者: 鈴木俊輔</div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ナビゲーションタブ -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-calc', this)">自分の1000点満点(S値)を計算</button>
+      <button class="tab-btn" onclick="switchTab('tab-schools', this)">高校検索 (距離・通学ルート)</button>
+    </div>
+
+    <!-- ==========================================
+         タブ1: 自分の1000点満点（S値）算出
+         ========================================== -->
+    <div id="tab-calc" class="tab-content active">
+      <div class="card">
+        <h2 class="card-title">1. 成績・点数の入力</h2>
+
+        <!-- 学年選択 -->
+        <div class="grade-selector">
+          <label class="radio-label">
+            <input type="radio" name="grade" value="3" checked onchange="toggleGradeInput()"> 中3生（実質内申）
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="grade" value="2" onchange="toggleGradeInput()"> 中2生（見込み計算）
+          </label>
+        </div>
+
+        <!-- 内申点入力 -->
+        <h3 style="font-size: 1rem; margin-bottom: 8px; color: var(--primary);">■ 内申点（教科別 5段階評価）</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;" id="grade-note">
+          ※通知表（あゆみ）の数字を選択してください。中3の数値は選考時に自動で2倍計算されます。
+        </p>
+
+        <!-- 一括反映ボタン（内申） -->
+        <div class="preset-buttons">
+          <span class="preset-label">⚡ 内申一括設定:</span>
+          <button type="button" class="preset-btn" onclick="quickSetGrades(5)">オール 5</button>
+          <button type="button" class="preset-btn" onclick="quickSetGrades(4)">オール 4</button>
+          <button type="button" class="preset-btn" onclick="quickSetGrades(3)">オール 3</button>
+          <button type="button" class="preset-btn" onclick="quickSetGrades(2)">オール 2</button>
+          <button type="button" class="preset-btn" onclick="quickSetGrades(1)">オール 1</button>
+        </div>
+
+        <div id="sec-inner-2">
+          <h4 id="sec-inner-2-title" style="font-size: 0.85rem; color: #475569; margin-bottom: 6px;">【中学2年】学年末内申 (9教科 / 45点満点)</h4>
+          <div class="input-grid">
+            <div class="input-group"><label>国語</label><select id="c2-jpn"><option value="5" selected>5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>数学</label><select id="c2-math"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>英語</label><select id="c2-eng"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>理科</label><select id="c2-sci"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>社会</label><select id="c2-soc"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>音楽</label><select id="c2-mus"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>美術</label><select id="c2-art"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>保体</label><select id="c2-pe"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>技家</label><select id="c2-tech"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          </div>
+        </div>
+
+        <div id="sec-inner-3">
+          <h4 style="font-size: 0.85rem; color: #475569; margin-bottom: 6px;">【中学3年】成績（※自動で2倍評価され90点満点となります）</h4>
+          <div class="input-grid">
+            <div class="input-group"><label>国語</label><select id="c3-jpn"><option value="5" selected>5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>数学</label><select id="c3-math"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>英語</label><select id="c3-eng"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>理科</label><select id="c3-sci"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>社会</label><select id="c3-soc"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>音楽</label><select id="c3-mus"><option value="5">5</option><option value="4">4</option><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>美術</label><select id="c3-art"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>保体</label><select id="c3-pe"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+            <div class="input-group"><label>技家</label><select id="c3-tech"><option value="5">5</option><option value="4" selected>4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          </div>
+        </div>
+
+        <!-- 5教科点数入力 -->
+        <h3 style="font-size: 1rem; margin-top: 10px; margin-bottom: 8px; color: var(--primary);">■ 5教科のテスト点数（各100点満点）</h3>
+
+        <!-- 一括反映ボタン（テスト） -->
+        <div class="preset-buttons">
+          <span class="preset-label">⚡ テスト点数一括設定:</span>
+          <button type="button" class="preset-btn" onclick="quickSetScores(90)">全教科 90点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(80)">80点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(70)">70点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(60)">60点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(50)">50点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(40)">40点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(30)">30点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(20)">20点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(10)">10点</button>
+          <button type="button" class="preset-btn" onclick="quickSetScores(0)">0点</button>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-group"><label>国語 (点)</label><input type="number" id="t-jpn" value="75" min="0" max="100"></div>
+          <div class="input-group"><label>数学 (点)</label><input type="number" id="t-math" value="65" min="0" max="100"></div>
+          <div class="input-group"><label>英語 (点)</label><input type="number" id="t-eng" value="70" min="0" max="100"></div>
+          <div class="input-group"><label>理科 (点)</label><input type="number" id="t-sci" value="60" min="0" max="100"></div>
+          <div class="input-group"><label>社会 (点)</label><input type="number" id="t-soc" value="70" min="0" max="100"></div>
+        </div>
+
+        <!-- 比率選択 -->
+        <div class="ratio-select-box">
+          <label style="font-size: 0.85rem; font-weight: 700;">計算比率パターン (内申 : 学力検査)</label>
+          <select id="ratio-select" class="select-filter" style="margin-top: 6px;">
+            <option value="46" selected>4 : 6 （神奈川県立高校の標準的な比率）</option>
+            <option value="37">3 : 7 （学力検査重視・上位校向け）</option>
+            <option value="55">5 : 5 （内申重視）</option>
+            <option value="28">2 : 8 （超学力検査重視）</option>
+          </select>
+        </div>
+
+        <button class="btn-submit" onclick="calculateSValue()">1000点満点のスコアを計算する</button>
+      </div>
+
+      <!-- 計算結果表示領域 -->
+      <div id="result-box" class="result-box card">
+        <h2 class="card-title">2. 算出結果（あなたの1000点満点の手数・スコア）</h2>
+
+        <div class="score-summary-grid">
+          <div class="score-card">
+            <div class="label">内申点合計 (135点満点)</div>
+            <div class="value" id="res-naishin">-</div>
+          </div>
+          <div class="score-card">
+            <div class="label">5教科テスト合計 (500点満点)</div>
+            <div class="value" id="res-test">-</div>
+          </div>
+          <div class="score-card" style="border-color: var(--primary); background: var(--primary-bg);">
+            <div class="label" style="color: var(--primary); font-weight: 800;">あなたの1000点満点スコア (S1値)</div>
+            <div class="value" id="res-s1" style="font-size: 2.2rem; color: #1e3a8a;">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         タブ2: 高校検索 (距離・通学ルート)
+         ========================================== -->
+    <div id="tab-schools" class="tab-content">
+      <div class="card">
+        <h2 class="card-title">高校絞り込み検索 ＆ 通学ルートナビ</h2>
+
+        <div class="filter-panel">
+          <!-- 自宅住所の指定 -->
+          <div class="address-input-box">
+            <span class="filter-label" style="color: #0369a1;">📍 出発地住所の設定（「入力住所からのルート」ボタン用）</span>
+            <input type="text" id="custom-origin" class="search-input" placeholder="例: 横浜市港北区樽町1-28-1 や 横浜市港北区師岡町" oninput="renderSchoolList()" style="border-color: #38bdf8;">
+            <p style="font-size: 0.75rem; color: #0284c7; margin-top: 4px;">※未入力の場合はGoogleマップで「現在地」としてルートを検索します。</p>
+          </div>
+
+          <!-- キーワード検索 -->
+          <div class="filter-row">
+            <span class="filter-label">キーワード検索 (高校名・エリア)</span>
+            <input type="text" id="filter-keyword" class="search-input" placeholder="例: 港北, 鶴見, サイエンス, 品川, 青葉..." oninput="renderSchoolList()">
+          </div>
+
+          <!-- 距離フィルター -->
+          <div class="filter-row">
+            <span class="filter-label">樽町中学校（樽町1-28-1）からの直線距離</span>
+            <div class="filter-tags" id="filter-dist">
+              <button class="tag-btn active" onclick="setDistFilter(999, this)">指定なし</button>
+              <button class="tag-btn" onclick="setDistFilter(3, this)">3km以内 (自転車圏内)</button>
+              <button class="tag-btn" onclick="setDistFilter(5, this)">5km以内</button>
+              <button class="tag-btn" onclick="setDistFilter(8, this)">8km以内</button>
+              <button class="tag-btn" onclick="setDistFilter(12, this)">12km以内</button>
+              <button class="tag-btn" onclick="setDistFilter(20, this)">20km以内</button>
+            </div>
+          </div>
+
+          <!-- 区分 & 並び替え -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="filter-row">
+            <div>
+              <span class="filter-label">公立 / 私立</span>
+              <select id="filter-type" class="select-filter" onchange="renderSchoolList()">
+                <option value="">すべて</option>
+                <option value="公立">公立のみ</option>
+                <option value="私立">私立のみ</option>
+              </select>
+            </div>
+            <div>
+              <span class="filter-label">並び替え</span>
+              <select id="filter-sort" class="select-filter" onchange="renderSchoolList()">
+                <option value="dist-asc">樽町中から近い順</option>
+                <option value="name-asc">五十音順 (あ〜ん)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 学校リスト表示 -->
+        <div id="all-school-list" class="school-card-list">
+          <!-- JSでカード生成 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 樽町中学校 進路検討サポートWebアプリ | Created by 鈴木俊輔</p>
+    <p style="margin-top: 4px; font-size: 0.75rem;">※表示距離は樽町中学校（樽町1-28-1）からの直線距離算出値です。マップボタンを押すとGoogle Mapsで電車・バスの乗換ルートが開きます。</p>
+  </footer>
+
+  <script>
+    /* ==========================================
+       1. 樽町中学校 & 高校データベース（全80校 / 純粋な位置情報のみ）
+       ========================================== */
+    const TARUMACHI_LAT = 35.5323;
+    const TARUMACHI_LNG = 139.6367;
+
+    const highSchools = [
+      // --- 横浜市港北区・鶴見区・神奈川区周辺（公立） ---
+      { id: 1, name: "神奈川県立 港北高等学校", type: "公立", lat: 35.5255, lng: 139.6268, address: "横浜市港北区大倉山7-35-1" },
+      { id: 2, name: "神奈川県立 鶴見高等学校", type: "公立", lat: 35.5133, lng: 139.6631, address: "横浜市鶴見区下末吉6-1-1" },
+      { id: 3, name: "横浜市立 東高等学校", type: "公立", lat: 35.5280, lng: 139.6580, address: "横浜市鶴見区馬場3-15-1" },
+      { id: 4, name: "神奈川県立 岸根高等学校", type: "公立", lat: 35.4988, lng: 139.6150, address: "横浜市港北区岸根町370" },
+      { id: 5, name: "神奈川県立 新羽高等学校", type: "公立", lat: 35.5385, lng: 139.6080, address: "横浜市港北区新羽町1348" },
+      { id: 6, name: "神奈川県立 横浜翠嵐高等学校", type: "公立", lat: 35.4748, lng: 139.6190, address: "横浜市神奈川区三ツ沢上町11-1" },
+      { id: 7, name: "神奈川県立 横浜平沼高等学校", type: "公立", lat: 35.4600, lng: 139.6140, address: "横浜市西区岡野1-5-8" },
+      { id: 8, name: "神奈川県立 城郷高等学校", type: "公立", lat: 35.4920, lng: 139.5980, address: "横浜市神奈川区三枚町364" },
+      { id: 9, name: "神奈川県立 新城高等学校", type: "公立", lat: 35.5820, lng: 139.6300, address: "川崎市中原区下新城1-14-1" },
+      { id: 10, name: "神奈川県立 神奈川総合高等学校", type: "公立", lat: 35.4765, lng: 139.6275, address: "横浜市神奈川区平川町19-2" },
+      { id: 11, name: "神奈川県立 神奈川工業高等学校", type: "公立", lat: 35.4760, lng: 139.6280, address: "横浜市神奈川区平川町19-1" },
+      { id: 12, name: "神奈川県立 鶴見総合高等学校", type: "公立", lat: 35.5030, lng: 139.6800, address: "横浜市鶴見区平安町2-28-8" },
+      { id: 13, name: "神奈川県立 市ヶ尾高等学校", type: "公立", lat: 35.5530, lng: 139.5280, address: "横浜市青葉区市ケ尾町1854" },
+      { id: 14, name: "神奈川県立 住吉高等学校", type: "公立", lat: 35.5650, lng: 139.6550, address: "川崎市中原区木月住吉町18-1" },
+      { id: 15, name: "川崎市立 橘高等学校", type: "公立", lat: 35.5720, lng: 139.6600, address: "川崎市中原区中丸子562" },
+      { id: 16, name: "横浜市立 横浜商業高等学校", type: "公立", lat: 35.4330, lng: 139.6100, address: "横浜市南区南太田2-30-1" },
+      { id: 17, name: "神奈川県立 生田高等学校", type: "公立", lat: 35.6030, lng: 139.5480, address: "川崎市多摩区長沢3-4-1" },
+      { id: 18, name: "横浜市立 横浜サイエンスフロンティア高等学校", type: "公立", lat: 35.5008, lng: 139.6805, address: "横浜市鶴見区小野町6" },
+      { id: 19, name: "神奈川県立 多摩高等学校", type: "公立", lat: 35.6148, lng: 139.5855, address: "川崎市多摩区宿河原2-14-1" },
+      { id: 20, name: "神奈川県立 希望ヶ丘高等学校", type: "公立", lat: 35.4593, lng: 139.5186, address: "横浜市旭区南希望が丘79" },
+      { id: 21, name: "神奈川県立 横浜緑ケ丘高等学校", type: "公立", lat: 35.4312, lng: 139.6483, address: "横浜市中区本牧緑ヶ丘37" },
+      { id: 22, name: "川崎市立 川崎高等学校", type: "公立", lat: 35.5255, lng: 139.7128, address: "川崎市川崎区中島3-3-1" },
+      { id: 23, name: "神奈川県立 川崎北高等学校", type: "公立", lat: 35.5885, lng: 139.5962, address: "川崎市高津区新作5-11-1" },
+      { id: 24, name: "神奈川県立 高津高等学校", type: "公立", lat: 35.5982, lng: 139.6150, address: "川崎市高津区久本3-11-1" },
+      { id: 25, name: "神奈川県立 霧が丘高等学校", type: "公立", lat: 35.5230, lng: 139.5050, address: "横浜市緑区霧が丘6-16" },
+      { id: 26, name: "神奈川県立 旭高等学校", type: "公立", lat: 35.4780, lng: 139.5080, address: "横浜市旭区下川井町2240" },
+
+      // --- 横浜市・川崎市・都内（私立） ---
+      { id: 27, name: "武相高等学校", type: "私立", lat: 35.5180, lng: 139.6300, address: "横浜市港北区仲手原2-34-1" },
+      { id: 28, name: "橘学苑高等学校", type: "私立", lat: 35.5220, lng: 139.6540, address: "横浜市鶴見区梶山1-1-1" },
+      { id: 29, name: "横浜創英高等学校", type: "私立", lat: 35.4890, lng: 139.6310, address: "横浜市神奈川区大口入江2-29-1" },
+      { id: 30, name: "日本大学高等学校", type: "私立", lat: 35.5510, lng: 139.6330, address: "横浜市港北区日吉5-22-1" },
+      { id: 31, name: "白鵬女子高等学校", type: "私立", lat: 35.5120, lng: 139.6560, address: "横浜市鶴見区矢向3-29-1" },
+      { id: 32, name: "横浜清風高等学校", type: "私立", lat: 35.4430, lng: 139.6010, address: "横浜市保土ケ谷区岩井町247" },
+      { id: 33, name: "法政大学第二高等学校", type: "私立", lat: 35.5760, lng: 139.6570, address: "川崎市中原区木月大町6-1" },
+      { id: 34, name: "慶應義塾高等学校", type: "私立", lat: 35.5530, lng: 139.6480, address: "横浜市港北区日吉4-1-2" },
+      { id: 35, name: "中央大学附属横浜高等学校", type: "私立", lat: 35.5480, lng: 139.5780, address: "横浜市都筑区牛久保東1-2-1" },
+      { id: 36, name: "駒澤大学高等学校", type: "私立", lat: 35.6260, lng: 139.6580, address: "東京都世田谷区上用賀1-17-12" },
+      { id: 37, name: "横浜隼人高等学校", type: "私立", lat: 35.4560, lng: 139.5160, address: "横浜市瀬谷区阿久和南1-3-1" },
+      { id: 38, name: "鶴見大学附属高等学校", type: "私立", lat: 35.5088, lng: 139.6710, address: "横浜市鶴見区鶴見2-2-1" },
+      { id: 39, name: "横浜商科大学高等学校", type: "私立", lat: 35.5125, lng: 139.6700, address: "横浜市旭区白根4-11-1" },
+      { id: 40, name: "桐蔭学園高等学校", type: "私立", lat: 35.5658, lng: 139.5160, address: "横浜市青葉区鉄町1614" },
+      { id: 41, name: "青稜高等学校", type: "私立", lat: 35.6075, lng: 139.7215, address: "東京都品川区二葉1-6-6" },
+      { id: 42, name: "朋優学院高等学校", type: "私立", lat: 35.6071, lng: 139.7135, address: "東京都品川区中延1-10-15" },
+      { id: 43, name: "東京都市大学等々力高等学校", type: "私立", lat: 35.6015, lng: 139.6508, address: "東京都世田谷区等々力8-10-7" },
+      { id: 44, name: "捜真女学校高等学部", type: "私立", lat: 35.4802, lng: 139.6262, address: "横浜市神奈川区中丸8" },
+      { id: 45, name: "神奈川学園高等学校", type: "私立", lat: 35.4745, lng: 139.6235, address: "横浜市神奈川区沢渡18" },
+      { id: 46, name: "浅野高等学校", type: "私立", lat: 35.4892, lng: 139.6468, address: "横浜市神奈川区子安台1-3-1" },
+
+      // --- その他県内・都内アクセス圏 ---
+      { id: 47, name: "神奈川県立 元石川高等学校", type: "公立", lat: 35.5780, lng: 139.5450, address: "横浜市青葉区元石川町4114" },
+      { id: 48, name: "神奈川県立 荏田高等学校", type: "公立", lat: 35.5580, lng: 139.5480, address: "横浜市青葉区荏田町759" },
+      { id: 49, name: "横浜市立 みなと総合高等学校", type: "公立", lat: 35.4380, lng: 139.6450, address: "横浜市中区山下町231" },
+      { id: 50, name: "横浜市立 金沢高等学校", type: "公立", lat: 35.3350, lng: 139.6230, address: "横浜市金沢区瀬戸22-1" },
+      { id: 51, name: "横浜市立 戸塚高等学校", type: "公立", lat: 35.3850, lng: 139.5350, address: "横浜市戸塚区汲沢2-7-1" },
+      { id: 52, name: "神奈川県立 横浜清陵高等学校", type: "公立", lat: 35.4320, lng: 139.6080, address: "横浜市南区清水ケ丘128" },
+      { id: 53, name: "神奈川県立 横浜立野高等学校", type: "公立", lat: 35.4280, lng: 139.6480, address: "横浜市中区立野74" },
+      { id: 54, name: "神奈川県立 保土ケ谷高等学校", type: "公立", lat: 35.4650, lng: 139.5780, address: "横浜市保土ケ谷区川島町1557" },
+      { id: 55, name: "神奈川県立 横浜国際高等学校", type: "公立", lat: 35.4220, lng: 139.5850, address: "横浜市南区六ツ川1-731" },
+      { id: 56, name: "神奈川県立 横浜栄高等学校", type: "公立", lat: 35.3620, lng: 139.5550, address: "横浜市栄区桂町611" },
+      { id: 57, name: "神奈川県立 光陵高等学校", type: "公立", lat: 35.4520, lng: 139.5880, address: "横浜市保土ケ谷区権太坂1-7-1" },
+      { id: 58, name: "神奈川県立 柏陽高等学校", type: "公立", lat: 35.3650, lng: 139.5620, address: "横浜市栄区小菅ケ谷3-2-1" },
+      { id: 59, name: "神奈川県立 鎌倉高等学校", type: "公立", lat: 35.3050, lng: 139.5020, address: "鎌倉市腰越1-2-1" },
+      { id: 60, name: "神奈川県立 百合丘高等学校", type: "公立", lat: 35.6020, lng: 139.5180, address: "川崎市麻生区百合丘2-4-1" },
+      { id: 61, name: "神奈川県立 麻生高等学校", type: "公立", lat: 35.6050, lng: 139.5050, address: "川崎市麻生区万福寺3-8-1" },
+      { id: 62, name: "神奈川県立 川崎工科高等学校", type: "公立", lat: 35.5450, lng: 139.7020, address: "川崎市川崎区藤崎3-4-1" },
+      { id: 63, name: "神奈川県立 向の岡工業高等学校", type: "公立", lat: 35.6180, lng: 139.5650, address: "川崎市多摩区堰1-1-1" },
+      { id: 64, name: "サレジオ学院高等学校", type: "私立", lat: 35.5420, lng: 139.5720, address: "横浜市都筑区南山田3-43-1" },
+      { id: 65, name: "横浜翠陵高等学校", type: "私立", lat: 35.5280, lng: 139.5180, address: "横浜市緑区三保町1" },
+      { id: 66, name: "山手学院高等学校", type: "私立", lat: 35.3720, lng: 139.5780, address: "横浜市栄区上郷町1500" },
+      { id: 67, name: "横浜女学院高等学校", type: "私立", lat: 35.4380, lng: 139.6420, address: "横浜市中区山手町84" },
+      { id: 68, name: "関東学院高等学校", type: "私立", lat: 35.4350, lng: 139.6210, address: "横浜市南区三春台4" },
+      { id: 69, name: "目黒日本大学高等学校", type: "私立", lat: 35.6330, lng: 139.7150, address: "東京都目黒区目黒1-6-15" },
+      { id: 70, name: "多摩大学目黒高等学校", type: "私立", lat: 35.6280, lng: 139.7080, address: "東京都目黒区下目黒4-10-24" },
+      { id: 71, name: "國學院高等学校", type: "私立", lat: 35.6740, lng: 139.7120, address: "東京都渋谷区神宮前2-29-3" },
+      { id: 72, name: "田園調布学園高等部", type: "私立", lat: 35.5980, lng: 139.6680, address: "東京都世田谷区東玉川2-41-1" },
+      { id: 73, name: "玉川聖学院高等部", type: "私立", lat: 35.6050, lng: 139.6620, address: "東京都世田谷区九品仏6-24-15" },
+      { id: 74, name: "文教大学付属高等学校", type: "私立", lat: 35.6080, lng: 139.7050, address: "東京都品川区旗の台3-4-21" },
+      { id: 75, name: "香蘭女学校高等科", type: "私立", lat: 35.6080, lng: 139.7180, address: "東京都品川区旗の台6-22-21" },
+      { id: 76, name: "品川翔英高等学校", type: "私立", lat: 35.6050, lng: 139.7320, address: "東京都品川区西大井1-6-13" },
+      { id: 77, name: "東京実業高等学校", type: "私立", lat: 35.5620, lng: 139.7180, address: "東京都大田区蒲田4-21-7" },
+      { id: 78, name: "日本大学櫻丘高等学校", type: "私立", lat: 35.6650, lng: 139.6380, address: "東京都世田谷区桜上水3-28-1" },
+      { id: 79, name: "東京都市大学付属高等学校", type: "私立", lat: 35.6380, lng: 139.6620, address: "東京都世田谷区成城1-2-1" },
+      { id: 80, name: "世田谷学園高等学校", type: "私立", lat: 35.6450, lng: 139.6720, address: "東京都世田谷区三宿1-16-31" }
+    ];
+
+    // 直線距離計算
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round(R * c * 10) / 10;
+    }
+
+    // 各校に距離をロード
+    highSchools.forEach(school => {
+      school.distance = calculateDistance(TARUMACHI_LAT, TARUMACHI_LNG, school.lat, school.lng);
+    });
+
+    /* ==========================================
+       2. UI切り替え & 一括入力
+       ========================================== */
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+
+    function toggleGradeInput() {
+      const isGrade3 = document.querySelector('input[name="grade"]:checked').value === "3";
+      const secInner2 = document.getElementById('sec-inner-2');
+      const secInner3 = document.getElementById('sec-inner-3');
+      const sec2Title = document.getElementById('sec-inner-2-title');
+      const note = document.getElementById('grade-note');
+
+      if (isGrade3) {
+        secInner2.style.display = "block";
+        secInner3.style.display = "block";
+        sec2Title.innerText = "【中学2年】学年末内申 (9教科 / 45点満点)";
+        note.innerHTML = "※通知表（あゆみ）の数字を選択してください。中3の数値は選考時に自動で2倍計算されます。";
+      } else {
+        secInner2.style.display = "block";
+        secInner3.style.display = "none";
+        sec2Title.innerText = "【中学2年】現在の成績 (9教科 / 45点満点 ※自動で3倍換算されます)";
+        note.innerHTML = "※中2生モード：現在の中2内申点が中3でも継続すると仮定して見込みS値を算出します。";
+      }
+    }
+
+    function quickSetGrades(val) {
+      const subjects = ['jpn', 'math', 'eng', 'sci', 'soc', 'mus', 'art', 'pe', 'tech'];
+      subjects.forEach(sub => {
+        const el2 = document.getElementById(`c2-${sub}`);
+        const el3 = document.getElementById(`c3-${sub}`);
+        if (el2) el2.value = val;
+        if (el3) el3.value = val;
+      });
+    }
+
+    function quickSetScores(val) {
+      const subjects = ['jpn', 'math', 'eng', 'sci', 'soc'];
+      subjects.forEach(sub => {
+        const el = document.getElementById(`t-${sub}`);
+        if (el) el.value = val;
+      });
+    }
+
+    /* ==========================================
+       3. 1000点満点スコア (S1値) 計算ロジック
+       ========================================== */
+    function calculateSValue() {
+      const isGrade3 = document.querySelector('input[name="grade"]:checked').value === "3";
+      
+      const subjects = ['jpn', 'math', 'eng', 'sci', 'soc', 'mus', 'art', 'pe', 'tech'];
+      let sumInner2 = 0;
+      let sumInner3 = 0;
+
+      subjects.forEach(sub => {
+        sumInner2 += parseInt(document.getElementById(`c2-${sub}`).value) || 0;
+        if (isGrade3) {
+          sumInner3 += parseInt(document.getElementById(`c3-${sub}`).value) || 0;
+        }
+      });
+
+      let totalNaishin = 0;
+      if (isGrade3) {
+        totalNaishin = sumInner2 + (sumInner3 * 2); // 135点満点
+      } else {
+        totalNaishin = sumInner2 * 3; // 中2成績を3倍して135点換算
+      }
+
+      // 5教科テスト点数計算
+      const subjectsTest = ['jpn', 'math', 'eng', 'sci', 'soc'];
+      let totalTest = 0;
+      subjectsTest.forEach(sub => {
+        let score = parseInt(document.getElementById(`t-${sub}`).value);
+        if (isNaN(score)) score = 0;
+        if (score < 0) score = 0;
+        if (score > 100) score = 100;
+        document.getElementById(`t-${sub}`).value = score;
+        totalTest += score;
+      });
+
+      // S1値計算公式 (1000点満点)
+      const f = (totalNaishin / 135) * 100;
+      const g = (totalTest / 500) * 100;
+
+      const ratio = document.getElementById('ratio-select').value;
+      let a = 4, b = 6;
+      if (ratio === "37") { a = 3; b = 7; }
+      else if (ratio === "55") { a = 5; b = 5; }
+      else if (ratio === "28") { a = 2; b = 8; }
+
+      const s1 = Math.round((f * a) + (g * b));
+
+      // 結果の画面表示
+      document.getElementById('res-naishin').innerText = `${totalNaishin} / 135`;
+      document.getElementById('res-test').innerText = `${totalTest} / 500`;
+      document.getElementById('res-s1').innerText = `${s1} 点`;
+
+      document.getElementById('result-box').style.display = 'block';
+      document.getElementById('result-box').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ==========================================
+       4. 高校検索 & ルート描画
+       ========================================== */
+    let filterDistMax = 999;
+
+    function setDistFilter(dist, btn) {
+      filterDistMax = dist;
+      document.querySelectorAll('#filter-dist .tag-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSchoolList();
+    }
+
+    function createMapUrls(schoolAddress) {
+      const customOriginVal = document.getElementById('custom-origin').value.trim();
+      const originParam = customOriginVal !== '' ? customOriginVal : '現在地';
+
+      const tarumachiUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent('横浜市立樽町中学校')}&destination=${encodeURIComponent(schoolAddress)}&travelmode=transit`;
+      const customUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originParam)}&destination=${encodeURIComponent(schoolAddress)}&travelmode=transit`;
+
+      return { tarumachiUrl, customUrl };
+    }
+
+    function renderSchoolList() {
+      const container = document.getElementById('all-school-list');
+      container.innerHTML = '';
+
+      const keyword = document.getElementById('filter-keyword').value.trim().toLowerCase();
+      const typeVal = document.getElementById('filter-type').value;
+      const sortVal = document.getElementById('filter-sort').value;
+
+      let filtered = highSchools.filter(school => {
+        if (keyword && !school.name.toLowerCase().includes(keyword) && !school.address.toLowerCase().includes(keyword)) {
+          return false;
+        }
+        if (school.distance > filterDistMax) return false;
+        if (typeVal && school.type !== typeVal) return false;
+
+        return true;
+      });
+
+      // 並び替え処理
+      filtered.sort((a, b) => {
+        if (sortVal === "dist-asc") return a.distance - b.distance;
+        if (sortVal === "name-asc") return a.name.localeCompare(b.name, 'ja');
+        return 0;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:30px;">条件に合う高校が見つかりませんでした。</p>';
+        return;
+      }
+
+      filtered.forEach(school => {
+        const urls = createMapUrls(school.address);
+        // Googleで「高校名 内申点」を調べる検索URL
+        const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(school.name + ' 内申点')}`;
+
+        const card = document.createElement('div');
+        card.className = 'school-card';
+        card.innerHTML = `
+          <div class="school-header">
+            <span class="school-name">${school.name}</span>
+            <div class="school-badges">
+              <span class="badge ${school.type === '公立' ? 'badge-public' : 'badge-private'}">${school.type}</span>
+              <span class="badge badge-dist">樽町中から ${school.distance}km</span>
+            </div>
+          </div>
+
+          <div class="school-address-text">📍 ${school.address}</div>
+
+          <div class="map-buttons">
+            <a href="${urls.tarumachiUrl}" target="_blank" rel="noopener noreferrer" class="btn-map">
+              🏫 樽町中からのルート
+            </a>
+            <a href="${urls.customUrl}" target="_blank" rel="noopener noreferrer" class="btn-map btn-map-custom">
+              🏠 入力住所からのルート
+            </a>
+            <a href="${googleSearchUrl}" target="_blank" rel="noopener noreferrer" class="btn-map btn-map-search">
+              🔍 googleでこのサイトの内申点を調べる
+            </a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // 初期起動
+    window.onload = function() {
+      toggleGradeInput();
+      renderSchoolList();
+    };
+  </script>
+</body>
+</html>
